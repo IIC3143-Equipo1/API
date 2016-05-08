@@ -1,5 +1,5 @@
 {
-  "name": "evaluate",
+  "name": "evaluate-api",
   "main": "server.js",
   "dependencies": {
     "express": "^4.1.2"
