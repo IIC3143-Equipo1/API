@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+// to enable CSRF protection
 app.use(session({
     secret: '5h4r1ng15C4r1ng'
 }));
@@ -22,6 +23,13 @@ app.use(csrf());
 app.use(function (req, res, next) {
     res.cookie("XSRF-TOKEN",req.csrfToken());
     return next();
+});
+
+// to allow access from pages served by other servers
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 });
 
 // survey routes
