@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var models = require('./models');
 var bodyParser = require('body-parser');
 var survey = require("./routes/survey");
 var cookieParser = require('cookie-parser');
@@ -30,6 +31,8 @@ app.get(api_prefix + '/survey/:id',    survey.getSurvey);
 app.put(api_prefix + '/survey/:id',    survey.updateSurvey);
 app.delete(api_prefix + '/survey/:id', survey.deleteSurvey);
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+models.sequelize.sync().then(function () {
+  app.listen(app.get('port'), function() {
+    console.log('Node app is running on port', app.get('port'));
+  });
 });
