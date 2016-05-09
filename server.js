@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var survey = require("./routes/survey");
+var cookieParser = require('cookie-parser');
+var session = require('cookie-session');
+var csrf = require('csurf');
 
 var api_prefix = '/api'
 
@@ -9,6 +12,16 @@ app.set('port', process.env.PORT || 5000);
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+app.use(session({
+    secret: '5h4r1ng15C4r1ng'
+}));
+app.use(cookieParser('secret'));
+app.use(csrf());
+app.use(function (req, res, next) {
+    res.cookie("XSRF-TOKEN",req.csrfToken());
+    return next();
+});
 
 // survey routes
 app.get(api_prefix + '/survey',        survey.allSurveys);
