@@ -42,6 +42,9 @@ router.route(api_prefix + "/answer")
       .get(answer.allAnswers)
       .post(answer.createAnswer);
 
+router.route(api_prefix + "/answer/:id")
+      .delete(answer.deleteAnswer);
+
 surveyAnswerRouter.route('/answers')
                   .get(answer.getSurveyAnswers);
 
