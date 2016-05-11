@@ -8,6 +8,7 @@ var cookieParser = require('cookie-parser');
 var session = require('cookie-session');
 var csrf = require('csurf');
 var cors = require('cors');
+var sendgrid  = require('sendgrid')('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');
 
 var api_prefix = '/api'
 
@@ -47,6 +48,22 @@ router.route(api_prefix + "/answer/:id")
 
 surveyAnswerRouter.route('/answers')
                   .get(answer.getSurveyAnswers);
+
+
+app.post(api_prefix + '/send_message', function(req,res){
+	sendgrid.send({
+	  to:       'jddm11@gmail.com',
+	  from:     'jddiaz4@uc.cl',
+	  subject:  'Encuesta curso 4 elemental',
+	  text:     'Juan Diaz, a continuación veras un link que te llevará a una encuesta en pro de obtener tu opinion acerca'+
+	  ' del curso. <<Link aqui>>'
+	}, function(err, json) {
+	  if (err) { 
+	  	res.json(err);
+	  }
+	  res.json(json);
+	});
+});
 
 /*
 app.get(api_prefix + '/survey',        survey.allSurveys);

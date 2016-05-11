@@ -10,6 +10,7 @@
     "express": "^4.13.4",
     "pg": "^4.5.5",
     "pg-hstore": "^2.3.2",
+    "sendgrid": "^2.0.0",
     "sequelize": "^3.23.0",
     "sequelize-cli": "^2.4.0"
   },
