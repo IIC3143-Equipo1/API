@@ -7,7 +7,7 @@
     "cookie-session": "^2.0.0-alpha.1",
     "cors": "^2.7.1",
     "csurf": "^1.8.3",
-    "express": "^4.1.2",
+    "express": "^4.13.4",
     "pg": "^4.5.5",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.23.0",

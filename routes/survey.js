@@ -1,9 +1,11 @@
 var models = require('../models');
 
 exports.createSurvey = function(req, res) {
+  console.log(req.body);
   models.Survey.create({
     name: req.body.name,
-    id_course: req.body.id_course
+    id_course: req.body.id_course,
+    kw_areas: req.body.kw_areas
   }).then(function(survey) {
     res.json(survey);
   });
@@ -11,6 +13,7 @@ exports.createSurvey = function(req, res) {
 
 // get all surveys
 exports.allSurveys = function(req, res) {
+  console.log("getting all surveys")
   var page = (req.query.page * 5) - 5;
   models.Survey.findAndCountAll({
     order: 'id ASC',
