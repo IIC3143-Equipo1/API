@@ -38,7 +38,7 @@ router.route(api_prefix + '/survey')
 
 router.route(api_prefix + '/survey/:id')
             .get(survey.getSurvey)
-            .put(survey.updateSurvey)
+            .post(survey.updateSurvey)
             .delete(survey.deleteSurvey);
 
 router.route(api_prefix + "/answer")
