@@ -12,10 +12,14 @@ module.exports = function(sequelize, DataTypes) {
       },
       code: {
         type: DataTypes.STRING
+      },
+      id_user:{
+        type: DataTypes.INTEGER
       }
   }, {
     classMethods: {
       associate: function(models) {
+        //,foreignKey: 'course_id' 
        models.Course.belongsToMany(models.Student, { through: models.StudentCourse });
       }
     }

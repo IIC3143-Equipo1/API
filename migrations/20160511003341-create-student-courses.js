@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-        return queryInterface.createTable('Studentcourses', {
+        return queryInterface.createTable('StudentCourses', {
       status: {
         type: Sequelize.INTEGER
       }
@@ -10,6 +10,6 @@ module.exports = {
   },
 
   down: function (queryInterface, Sequelize) {
-     return queryInterface.dropTable('Studentcourses');
+     return queryInterface.dropTable('StudentCourses');
   }
 };

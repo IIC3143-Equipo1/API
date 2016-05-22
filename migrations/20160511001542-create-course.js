@@ -14,6 +14,9 @@ module.exports = {
       },
       code: {
         type: Sequelize.STRING
+      },
+      id_user:{
+        type: Sequelize.INTEGER
       }
     });
   },

@@ -1,4 +1,4 @@
-var models = require('../models');
+  var models = require('../models');
 
 exports.createAnswer = function(req, res) {
   models.Answer.create({
@@ -8,7 +8,6 @@ exports.createAnswer = function(req, res) {
     res.json(answer);
   });
 };
-
 
 // get all answerts for a certain question
 exports.getSurveyAnswers = function(req,res) {
@@ -29,8 +28,6 @@ exports.allAnswers = function(req, res) {
     order: 'id ASC',
     limit: 5,
     offset: page || 0
-    //attributes: { include: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'total']] },
-    //group: [models.sequelize.col('id')]
   }).then(function(answers) {
       answers.current_page = parseInt(req.query.page,10);
       res.json(answers);

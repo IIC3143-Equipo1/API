@@ -3,9 +3,10 @@ var models = require('../models');
 exports.createSurvey = function(req, res) {
   console.log(req.body);
   models.Survey.create({
-    name: req.body.name,
+    name:      req.body.name,
     id_course: req.body.id_course,
-    kw_areas: req.body.kw_areas
+    kw_areas:  req.body.kw_areas,
+    id_user:   req.body.id_user || 1
   }).then(function(survey) {
     res.json(survey);
   });
@@ -19,8 +20,6 @@ exports.allSurveys = function(req, res) {
     order: 'id ASC',
     limit: 5,
     offset: page || 0
-    //attributes: { include: [[models.sequelize.fn('COUNT', models.sequelize.col('id')), 'total']] },
-    //group: [models.sequelize.col('id')]
   }).then(function(surveys) {
       surveys.current_page = parseInt(req.query.page,10);
       res.json(surveys);
@@ -58,7 +57,10 @@ exports.updateSurvey = function(req, res) {
   }).then(function(survey) {
     if(survey){
       survey.updateAttributes({
-        name: req.body.name,
+        name:      req.body.name,
+        id_course: req.body.id_course,
+        kw_areas:  req.body.kw_areas,
+        id_user:   req.body.id_user || 1
       }).then(function(survey) {
         res.send(survey);
       });

@@ -17,7 +17,10 @@ module.exports = {
           type: Sequelize.ARRAY(Sequelize.JSON)
         },
         id_course: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.INTEGER
+        },
+        id_user:{
+          type:Sequelize.INTEGER
         },
         createdAt: {
           allowNull: false,

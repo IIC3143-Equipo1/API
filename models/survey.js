@@ -8,6 +8,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: DataTypes.STRING,
     id_course: DataTypes.INTEGER,
+    id_user: DataTypes.INTEGER,
     kw_areas: DataTypes.ARRAY(DataTypes.JSON)
   }, {
     classMethods: {
