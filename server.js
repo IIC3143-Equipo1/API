@@ -69,8 +69,10 @@ router.route(api_prefix + '/student/:id')
             .put(student.updateStudent)
             .delete(student.deleteStudent);     
 
-router.route(api_prefix + '/student_aux/getStudentsByCourse')  
-            .get(student.getStudentsByCourse);                     
+router.route(api_prefix + '/student_course')  
+            .get(student.getStudentsByCourse)
+            .post(student.saveStudentCourse)
+            .delete(student.deleteStudentCourse);                      
 
 
 

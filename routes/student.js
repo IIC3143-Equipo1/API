@@ -26,6 +26,7 @@ exports.allStudents = function(req, res) {
 // get single student
 exports.getStudent = function(req, res) {
   models.Student.find({
+      include: [models.StudentCourse,models.Course],
     where: {
       id: req.params.id
     }
@@ -50,6 +51,31 @@ exports.getStudentsByCourse = function(req, res) {
     res.json(students);
   });
 };
+
+// save students by course
+exports.saveStudentCourse = function(req, res) {
+  console.log(req.body);
+  models.StudentCourse.create({
+    CourseId: req.body.id_course,
+    StudentId: req.body.id_student
+  }).then(function(student_course) {
+    res.json(student_course);
+  });
+};
+
+// delete a student course
+exports.deleteStudentCourse = function(req, res) {
+  models.StudentCourse.destroy({
+    where: {
+      CourseId: req.query.id_course,
+      StudentId: req.query.id_student
+    }
+  }).then(function(student_course) {
+    res.json(student_course);
+  });
+};
+
+
 
 // delete a single student
 exports.deleteStudent = function(req, res) {
