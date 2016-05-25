@@ -1,83 +1,106 @@
-var express = require('express');
-var app = express();
-var models = require('./models');
-var bodyParser = require('body-parser');
-var survey = require("./routes/survey");
-var answer = require("./routes/answer");
-var course = require("./routes/course");
-var student = require("./routes/student");
+var express      = require('express');
+var app          = express();
+var models       = require('./models');
+var bodyParser   = require('body-parser');
+var survey       = require("./routes/survey");
+var answer       = require("./routes/answer");
+var course       = require("./routes/course");
+var student      = require("./routes/student");
 var cookieParser = require('cookie-parser');
-var session = require('cookie-session');
-var csrf = require('csurf');
-var cors = require('cors');
-var sendgrid  = require('sendgrid')('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');
-
-var api_prefix = '/api'
+var cors         = require('cors');
+var sendgrid     = require('sendgrid')('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');
+var api_prefix   = '/api'
 
 app.set('port', process.env.PORT || 5001);
 
-// enable cross origin request
-// source: https://github.com/expressjs/cors
 app.use(cors());
-
 app.use(bodyParser.json()); 
-// parse urlconded bodies
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+app.use(cookieParser());
+
+var flash = require('connect-flash');
+app.use(flash());
+var passport = require('passport');
+var expressSession = require('express-session');
+app.use(expressSession({
+    secret: 'mySecretKey',
+    saveUninitialized: true,
+    resave: true,
+    cookie : { 
+      secure : false
+    }
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(function(req, res, next){
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
+  res.header('Access-Control-Allow-Credentials', true);
+  next();
+});
+
+// Initialize Passport
+var initPassport = require('./passport/init');
+initPassport(passport);
+
+var p_routes = require('./routes/passport');
+var routes   = p_routes.passport(passport);
+var auth     = p_routes.isAuthenticated;
+app.use('/', routes);
 
 var router  = express.Router();
 var surveyAnswerRouter = express.Router({mergeParams: true});
 router.use(api_prefix + '/survey/:id', surveyAnswerRouter);
-// -------------
-// survey routes
 
+//survey routes
 router.route(api_prefix + '/survey')
-            .get(survey.allSurveys)
-            .post(survey.createSurvey);
+            .get(auth,survey.allSurveys)
+            .post(auth,survey.createSurvey);
 
 router.route(api_prefix + '/survey/:id')
-            .get(survey.getSurvey)
-            .post(survey.updateSurvey)
-            .delete(survey.deleteSurvey);
+            .get(auth,survey.getSurvey)
+            .post(auth,survey.updateSurvey)
+            .delete(auth,survey.deleteSurvey);
 
 router.route(api_prefix + "/answer")
-      .get(answer.allAnswers)
-      .post(answer.createAnswer);
+            .get(auth,answer.allAnswers)
+            .post(auth,answer.createAnswer);
 
 router.route(api_prefix + "/answer/:id")
-      .delete(answer.deleteAnswer);
+            .delete(auth,answer.deleteAnswer);
 
 surveyAnswerRouter.route('/answers')
-                  .get(answer.getSurveyAnswers);
+            .get(auth,answer.getSurveyAnswers);
 
 router.route(api_prefix + '/course')
-            .get(course.allCourses)
-            .post(course.createCourse);
+            .get(auth,course.allCourses)
+            .post(auth,course.createCourse);
 
 router.route(api_prefix + '/course/:id')
-            .get(course.getCourse)
-            .put(course.updateCourse)
-            .delete(course.deleteCourse);   
+            .get(auth,course.getCourse)
+            .put(auth,course.updateCourse)
+            .delete(auth,course.deleteCourse);   
 
 router.route(api_prefix + '/student')
-            .get(student.allStudents)
-            .post(student.createStudent);
+            .get(auth,student.allStudents)
+            .post(auth,student.createStudent);
 
 router.route(api_prefix + '/student/:id')
-            .get(student.getStudent)
-            .put(student.updateStudent)
-            .delete(student.deleteStudent);     
+            .get(auth,student.getStudent)
+            .put(auth,student.updateStudent)
+            .delete(auth,student.deleteStudent);     
 
 router.route(api_prefix + '/student_course')  
-            .get(student.getStudentsByCourse)
-            .post(student.saveStudentCourse)
-            .delete(student.deleteStudentCourse);                      
+            .get(auth,student.getStudentsByCourse)
+            .post(auth,student.saveStudentCourse)
+            .delete(auth,student.deleteStudentCourse);                      
 
 
-
-
-app.post(api_prefix + '/send_message', function(req,res){
+app.post(api_prefix + '/send_message',auth, function(req,res){
 	sendgrid.send({
 	  to:       req.body.email,
 	  from:     'jddiaz4@uc.cl',
@@ -92,21 +115,7 @@ app.post(api_prefix + '/send_message', function(req,res){
 	});
 });
 
-/*
-app.get(api_prefix + '/survey',        survey.allSurveys);
-app.post(api_prefix + '/survey', 	   survey.createSurvey);
-app.get(api_prefix + '/survey/:id',    survey.getSurvey);
-app.put(api_prefix + '/survey/:id',    survey.updateSurvey);
-app.delete(api_prefix + '/survey/:id', survey.deleteSurvey);
-*/
-
-// answer routes
-//app.get(api_prefix + '/answer',                   answer.allAnswers);
-//app.post(api_prefix + '/answer',                  answer.createAnswer);
-
-
 app.use("/" , router);
-
 
 // sync models and run server
 models.sequelize.sync().then(function () {
