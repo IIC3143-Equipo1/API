@@ -9,7 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      survey_id: {
+      id_survey: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      id_student: {
         allowNull: false,
         type: Sequelize.INTEGER
       },

@@ -50,6 +50,7 @@ module.exports = {
 		/* GET Home Page */
 		router.get('/success', isAuthenticated, function(req, res){
 			return res.status(200).json({
+				user: req.user,
 	        	status: 'Registration successful!'
 	      	});
 		});

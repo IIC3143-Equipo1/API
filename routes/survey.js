@@ -14,9 +14,11 @@ exports.createSurvey = function(req, res) {
 
 // get all surveys
 exports.allSurveys = function(req, res) {
-  console.log("getting all surveys")
   var page = (req.query.page * 5) - 5;
   models.Survey.findAndCountAll({
+    where:{
+      id_user: req.user.id
+    },  
     order: 'id ASC',
     limit: 5,
     offset: page || 0
