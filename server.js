@@ -8,7 +8,7 @@ var course       = require("./routes/course");
 var student      = require("./routes/student");
 var cookieParser = require('cookie-parser');
 var cors         = require('cors');
-var sendgrid     = require('sendgrid')('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');
+var sendgrid     = require('sendgrid')(process.env.SENDGRID_KEY);
 var crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
     password = '3v41u4t-3';
@@ -16,7 +16,7 @@ var api_prefix   = '/api'
 
 app.set('port', process.env.PORT || 5001);
 
-app.use(cors({credentials: true, origin: 'http://localhost:5000'}));
+app.use(cors({credentials: true, origin: 'http://dsw1.ing.puc.cl'}));
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({
   extended: false
@@ -53,7 +53,7 @@ initPassport(passport);
 var p_routes = require('./routes/passport');
 var routes   = p_routes.passport(passport);
 var auth     = p_routes.isAuthenticated;
-app.use('/', routes);
+app.use('/evaluate', routes);
 
 var router  = express.Router();
 var surveyAnswerRouter = express.Router({mergeParams: true});
@@ -61,7 +61,7 @@ router.use(api_prefix + '/survey/:id', surveyAnswerRouter);
 
 //survey routes
 router.route(api_prefix + '/survey')
-            .get(auth,survey.allSurveys)
+            .get(survey.allSurveys)
             .post(auth,survey.createSurvey);
 
 router.route(api_prefix + '/survey/:id')
@@ -81,7 +81,7 @@ surveyAnswerRouter.route('/answers')
             .get(auth,answer.getSurveyAnswers);
 
 router.route(api_prefix + '/course')
-            .get(auth,course.allCourses)
+            .get(course.allCourses)
             .post(auth,course.createCourse);
 
 router.route(api_prefix + '/course/:id')
@@ -123,7 +123,7 @@ function decrypt(text){
 }
 /*****************************************/
 
-app.post(api_prefix + '/send_message', function(req,res){
+app.post('/evaluate'+ api_prefix + '/send_message', function(req,res){
 
   var encrypt_value = encrypt(req.body.student + '&-&' + req.body.survey);
 
@@ -196,17 +196,18 @@ app.post(api_prefix + '/send_message', function(req,res){
   });
 });
 
-app.post(api_prefix + '/decrypt', function(req,res){
+app.post('/evaluate' + api_prefix + '/decrypt', function(req,res){
   var decrypt_value = decrypt(req.body.text);
   res.json(decrypt_value);
 });
 
 
-app.use("/" , router);
+app.use("/evaluate" , router);
 
 // sync models and run server
 models.sequelize.sync().then(function () {
   app.listen(app.get('port'), function() {
     console.log('Node app is running on port', app.get('port'));
+    console.log(process.env.SENDGRID_KEY);
   });
 });
