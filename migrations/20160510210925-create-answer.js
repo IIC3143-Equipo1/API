@@ -27,6 +27,13 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      feedback: {
+      type: Sequelize.TEXT
+      },
+      was_open:{
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },
