@@ -25,32 +25,36 @@ module.exports = {
 
 		/* Route to test if the user is logged in or not */
 		router.get('/loggedin', function(req, res) { 
-			res.send(req.isAuthenticated() ? req.user : '0'); 
+			var user = req.user;
+			if(user && user.password){ user.password = ''; }
+			res.send(req.isAuthenticated() ? user : '0'); 
 		});
 		
 		/* Handle Login POST */
 		router.post('/login', passport.authenticate('login', {
-			successRedirect: '/evaluate/success',
-			failureRedirect: '/evaluate/fail',
+			successRedirect: process.env.API_URL + '/success',
+			failureRedirect: process.env.API_URL + '/fail',
 			failureFlash : true  
 		}));
 
-		/* GET Registration Page */
+		/* Error signup */
 		router.get('/signup', function(req, res){
 			res.render('register',{ message: req.flash('message') });
 		});
 
 		/* Handle Registration POST */
 		router.post('/signup', passport.authenticate('signup', {
-			successRedirect: '/evaluate/success',
-			failureRedirect: '/evaluate/signup',
+			successRedirect: process.env.API_URL + '/success',
+			failureRedirect: process.env.API_URL + '/signup',
 			failureFlash : true  
 		}));
 
-		/* GET Home Page */
+		/* Login and signup response */
 		router.get('/success', isAuthenticated, function(req, res){
+			var user = req.user;
+			if(user && user.password){ user.password = ''; }
 			return res.status(200).json({
-				user: req.user,
+				user: user,
 	        	status: 'Registration successful!'
 	      	});
 		});

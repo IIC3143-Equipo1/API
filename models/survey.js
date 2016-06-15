@@ -9,7 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING,
     id_course: DataTypes.INTEGER,
     id_user: DataTypes.INTEGER,
-    kw_areas: DataTypes.ARRAY(DataTypes.JSON)
+    kw_areas: DataTypes.ARRAY(DataTypes.JSON),
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
   }, {
     classMethods: {
       associate: function(models) {

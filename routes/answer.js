@@ -79,6 +79,38 @@ exports.deleteAnswer = function(req, res) {
   });
 };
 
+// count all answers
+exports.countAllAnswers = function(req, res) {
+  models.Answer.findAndCountAll({
+    where:{
+      was_open: false,    
+    },
+    include: [{
+      model: models.Survey,
+      where: { id_user: req.user.id }
+    }]
+  }).then(function(answers) {
+      res.json(answers.count);
+  });
+};
+
+// set the answer open
+exports.setAnswerOpen = function(req, res) {
+  models.Answer.find({
+    where: {
+      id: req.query.id
+    }
+  }).then(function(answer) {
+    if(answer){
+      answer.updateAttributes({
+        was_open: true
+      }).then(function(answer) {
+        res.send(answer);
+      });
+    }
+  });
+};
+
 // update single answer
 exports.updateAnswer = function(req, res) {
   models.Answer.find({
@@ -88,9 +120,10 @@ exports.updateAnswer = function(req, res) {
   }).then(function(answer) {
     if(answer){
       answer.updateAttributes({
-        id_survey: req.body.id_survey,
-        id_student: req.body.id_student,
-        kw_answers: req.body.kw_areas
+        //id_survey: (req.body.id_survey)?answer.id_survey:req.body.id_survey,,
+        //id_student: (req.body.id_student)?answer.id_student:req.body.id_student,
+        //kw_answers: (req.body.kw_areas)?answer.kw_areas:req.body.kw_areas,
+        feedback: req.body.feedback
       }).then(function(answer) {
         res.send(answer);
       });

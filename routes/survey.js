@@ -28,6 +28,17 @@ exports.allSurveys = function(req, res) {
   });
 };
 
+// count all surveys
+exports.countAllSurveis = function(req, res) {
+  models.Survey.findAndCountAll({
+    where:{
+      id_user: req.user.id
+    },  
+  }).then(function(surveys) {
+      res.json(surveys.count);
+  });
+};
+
 // get single survey
 exports.getSurvey = function(req, res) {
   models.Survey.find({

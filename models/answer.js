@@ -8,15 +8,26 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_student: {
               type: DataTypes.INTEGER,
-              references: 'Students', 
-              referencesKey: 'id'
+              unique: 'student_survey_key',
+              references: { 
+                model: "Students", 
+                key:   "id" }
             },
     id_survey: {
               type: DataTypes.INTEGER,
-              references: 'Surveys', 
-              referencesKey: 'id'
+              unique: 'student_survey_key',
+              references: { 
+                model: "Surveys", 
+                key:   "id" }
             },
-    kw_answers: DataTypes.ARRAY(DataTypes.JSON)
+    kw_answers: DataTypes.ARRAY(DataTypes.JSON),
+    feedback: {
+      type: DataTypes.TEXT
+    },
+    was_open:{
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {
     classMethods: {
       associate: function(models) {
