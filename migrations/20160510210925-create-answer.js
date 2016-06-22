@@ -31,6 +31,10 @@ module.exports = {
       feedback: {
       type: Sequelize.TEXT
       },
+      was_answered:{
+        type:Sequelize.BOOLEAN,
+        defaultValue:false
+      }
       was_open:{
         type: Sequelize.BOOLEAN,
         defaultValue: false

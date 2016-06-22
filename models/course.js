@@ -21,6 +21,8 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         //,foreignKey: 'course_id' 
        models.Course.belongsToMany(models.Student, { through: models.StudentCourse });
+       models.Course.hasMany(models.StudentCourse,{foreignKey:'CourseId'});
+       models.Course.hasMany(models.Survey,{foreignKey:'id_course'});
       }
     }
   });

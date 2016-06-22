@@ -63,3 +63,60 @@ exports.updateCourse = function(req, res) {
     }
   });
 };
+
+exports.chartCourses = function(req, res)
+{
+   models.Course.findAll({
+      attributes: ['name'],
+      include: [{
+      model: models.Survey,
+      attributes: ['name'],
+      include: [
+        {
+          model: models.Answer,
+          attributes:['was_answered']
+        }],
+      }],
+    order: 'id ASC'
+  }).then(function(courses) {
+
+var keys = Object.keys( courses );
+     var response = [];
+     for( var i = 0,length = keys.length; i < length; i++ ) {
+         var course = courses[keys[i]].dataValues;
+         var obj = new Object();
+         obj.position = i;
+         obj.name = course.name;
+         obj.data = [];
+         obj.data[0] = [];
+         obj.data[1] = [];
+         obj.info = [];
+         var keys_surveis   = Object.keys( course.Surveys );
+         var length_surveis = keys_surveis.length;
+         for( var j = 0; j < length_surveis; j++ ) {
+            var survey = course.Surveys[j].dataValues;
+            obj.info.push(survey.name);
+            var keys_answers   = Object.keys( survey.Answers );
+            var length_answers = keys_answers.length;
+            var count_was_answered     = 0;
+            var count_was_not_answered = 0;
+            for( var k = 0; k < length_answers; k++ ) {
+              var answer = survey.Answers[k].dataValues;
+              if(answer.was_answered)
+              {
+                count_was_answered =+ 1;
+              }else
+              {
+                count_was_not_answered =+ 1;
+              }
+            }
+            obj.data[0].push(count_was_answered);
+            obj.data[1].push(count_was_not_answered);
+         }
+         response.push(obj);
+     }
+      res.json(response);
+  });
+
+};
+

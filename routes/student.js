@@ -45,7 +45,11 @@ exports.getStudentsByCourse = function(req, res) {
     include: [{
       model: models.StudentCourse,
       where: { CourseId: req.query.id_course }
-    }]
+    },
+    {
+      model:models.Answer
+    }
+    ]
   }).then(function(students) {
     students.current_page = parseInt(req.query.page,10);
     res.json(students);
@@ -54,7 +58,6 @@ exports.getStudentsByCourse = function(req, res) {
 
 // save students by course
 exports.saveStudentCourse = function(req, res) {
-  console.log(req.body);
   models.StudentCourse.create({
     CourseId: req.body.id_course,
     StudentId: req.body.id_student

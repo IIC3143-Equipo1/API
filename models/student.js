@@ -1,4 +1,4 @@
-'use strict';
+  'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Student = sequelize.define('Student', {
       id: {
@@ -20,6 +20,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
          models.Student.hasMany(models.StudentCourse,{foreignKey:'StudentId'});
+         models.Student.hasMany(models.Answer,{foreignKey:'id_student'});
          //,foreignKey: 'student_id'  
          models.Student.belongsToMany(models.Course, { through: models.StudentCourse });
       }

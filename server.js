@@ -68,11 +68,11 @@ router.route(api_prefix + '/survey/:id')
 
 router.route(api_prefix + "/answer")
             .get(answer.allAnswers)
-            .post(answer.createAnswer);
+            .post(auth,answer.createAnswer);
 
 
 router.route(api_prefix + "/answer/:id")
-            .put(auth,answer.updateAnswer)
+            .put(answer.updateAnswer)
             .delete(auth,answer.deleteAnswer)
             .get(answer.getAnswer);
 
@@ -105,7 +105,7 @@ router.route(api_prefix + '/student_course')
 //user routes
 router.route(api_prefix + '/user')
             .get(user.allUsers)
-            .post(auth,user.createUser);
+            .post(user.createUser);
 
 router.route(api_prefix + '/user/:id')
             .get(user.getUser)
@@ -124,7 +124,20 @@ router.route(api_prefix + '/set_answer_open')
 
 router.route(api_prefix + '/count_answers_not_open')  
             .get(answer.countAllAnswers);  
-/***************************************************/            
+/***************************************************/  
+
+/**************** CHARTS *******************/
+
+router.route(api_prefix + '/chart_surveis')  
+            .post(survey.chartSurveis); 
+
+router.route(api_prefix + '/chart_courses')  
+            .post(course.chartCourses); 
+
+router.route(api_prefix + '/chart_answers')  
+            .post(answer.chartAnswers); 
+
+/*******************************************/          
 
 
 /************Crypto functions ************/
@@ -173,7 +186,7 @@ app.post(api_prefix + '/send_message', function(req,res){
                                 '<td align="center" valign="top">'+
                                     'Hola '+req.body.name+', tu opinión es valiosa para nosotros, por favor llena la encuesta que '+ 
                                     'encontraras a continuación en el siguiente enlace:<br \>'+
-                                    '<a href="http://localhost:5000/#/answer_form/'+encrypt_value+'">'+
+                                    '<a href="'+process.env.ORIGIN_URL+'/#/answer_form/'+encrypt_value+'">'+
                                     '<div style="background-color:#f2583e;color:white;padding:10px;font-size:14pt;font-weight:bold;'+
                                     'text-align:center;margin:10px;display:inline-block">Encuesta</div>'+
                                     '</a>'+
@@ -208,9 +221,17 @@ app.post(api_prefix + '/send_message', function(req,res){
   }, function(err, json) {
     if (err) { 
       console.log(err);
-      res.json(err);
+      res.status(500).json({error:'Hubo un error en el envío, por favor intenta de nuevo, '+
+        'de persistir el error por favor contacta al administrador de la aplicación','full':err});
     }else
     {
+
+    models.Answer.create({
+      id_survey:  req.body.survey,
+      id_student: req.body.student
+    }).then(function(answer) {
+      //OK
+    });
      res.json(json);
     }
   });

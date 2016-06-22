@@ -18,6 +18,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+        models.Survey.hasMany(models.Answer,{foreignKey:'id_survey'});
+        models.Survey.belongsTo(models.Course,{foreignKey:'id_course'});
       }
     }
   });

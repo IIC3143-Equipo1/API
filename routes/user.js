@@ -3,11 +3,11 @@ var bCrypt = require('bcrypt-nodejs');
 
 exports.createUser = function(req, res) {
   models.User.create({
-     username: req.param('username'),
-     password: createHash(req.param('password')),
-        email: req.param('email'),
-    firstName: req.param('firstName'),
-     lastName: req.param('lastName')
+     username: req.body.username,
+     password: createHash(req.body.password),
+        email: req.body.email,
+    firstName: req.body.firstName,
+     lastName: req.body.lastName
   }).then(function(user) {
     user.password = '';
     res.json(user);

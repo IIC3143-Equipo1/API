@@ -1,7 +1,6 @@
 var models = require('../models');
 
 exports.createSurvey = function(req, res) {
-  console.log(req.body);
   models.Survey.create({
     name:      req.body.name,
     id_course: req.body.id_course,
@@ -79,4 +78,59 @@ exports.updateSurvey = function(req, res) {
       });
     }
   });
+};
+
+exports.chartSurveis = function(req, res)
+{
+
+   models.Survey.findAll({
+      attributes: ['name','id'],
+      include: [{
+      model: models.Answer,
+      attributes:  ['id','was_answered'],
+    },{
+      model: models.Course,
+      attributes: ['name'],
+      include: [
+        {
+          model: models.StudentCourse,
+          attributes:['StudentId']
+        }],
+      }],
+    order: 'id ASC'
+  }).then(function(surveys) {
+     var keys = Object.keys( surveys );
+     var response = [];
+     for( var i = 0,length = keys.length; i < length; i++ ) {
+         var survey = surveys[keys[i]].dataValues;
+         var obj = new Object();
+         obj.position = i;
+         obj.data = [];
+         obj.info = new Object();
+         obj.info.survey    = survey.name;
+         obj.info.survey_id = survey.id;
+         var keys_answers   = Object.keys( survey.Answers );
+         var length_answers = keys_answers.length;
+         var count_was_answered     = 0;
+         var count_was_not_answered = 0;
+         for( var j = 0; j < length_answers; j++ ) {
+            var answer = survey.Answers[j].dataValues;
+            if(answer.was_answered)
+            {
+              count_was_answered =+ 1;
+            }else
+            {
+              count_was_not_answered =+ 1;
+            }
+         }
+         var students_count = survey.Course.StudentCourses.length;
+         obj.data.push(count_was_answered);
+         obj.data.push(count_was_not_answered);
+         obj.data.push(students_count - length_answers);
+         obj.info.course = survey.Course.name;
+         response.push(obj);
+     }
+      res.json(response);
+  });
+
 };
