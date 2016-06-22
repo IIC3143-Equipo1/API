@@ -40,13 +40,10 @@ module.exports = {
              var studentPromises = [];
              var NUM_STUDENTS = 50;
              for (var j = 0; j < NUM_STUDENTS; ++j) {
-               var now = new Date();
                studentPromises.push(models.Student.create({
                  name: faker.name.findName(),
                  code: faker.address.zipCode(),
-                 email: faker.internet.email(),
-                 createdAt: now,
-                 updatedAt: now
+                 email: faker.internet.email()
                }).then(student => models.StudentCourse.create({
                  CourseId: course.id,
                  StudentId: student.id
