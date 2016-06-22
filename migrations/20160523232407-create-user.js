@@ -12,20 +12,27 @@ module.exports = {
       username: {
         type: Sequelize.STRING
       },
-       firstname: {
+      firstName: {
         type: Sequelize.STRING
       },
-       lastname: {
+      lastName: {
         type: Sequelize.STRING
       },
-       password: {
+      password: {
         type: Sequelize.STRING
       },
-       email: {
+      email: {
         type: Sequelize.STRING
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
     });
-  },
   },
 
   down: function (queryInterface, Sequelize) {

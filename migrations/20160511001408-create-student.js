@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-        return queryInterface.createTable('Students', {
+    return queryInterface.createTable('Students', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,13 +12,20 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      code:
-      {
+      code: {
         type: Sequelize.STRING
       },
       email: {
         type: Sequelize.STRING
-      }
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
     });
   },
 

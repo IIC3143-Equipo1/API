@@ -46,7 +46,7 @@ module.exports = {
                  email: faker.internet.email()
                }).then(student => models.StudentCourse.create({
                  CourseId: course.id,
-                 StudentId: student.id
+                 StudentId: student.id,
                })));
              }
              return Promise.all(studentPromises);

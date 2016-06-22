@@ -29,12 +29,12 @@ module.exports = {
         type: Sequelize.DATE
       },
       feedback: {
-      type: Sequelize.TEXT
+        type: Sequelize.TEXT
       },
       was_answered:{
         type:Sequelize.BOOLEAN,
         defaultValue:false
-      }
+      },
       was_open:{
         type: Sequelize.BOOLEAN,
         defaultValue: false
