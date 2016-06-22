@@ -24,6 +24,10 @@ module.exports = function(sequelize, DataTypes) {
     feedback: {
       type: DataTypes.TEXT
     },
+    was_answered:{
+      type:DataTypes.BOOLEAN,
+      defaultValue:false
+    },
     was_open:{
       type: DataTypes.BOOLEAN,
       defaultValue: false
