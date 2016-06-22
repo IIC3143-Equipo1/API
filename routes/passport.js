@@ -38,25 +38,25 @@ module.exports = {
 		}));
 
 		/* Handle launch POST */
-		router.post('/launch', function(req,res,next)
-		{
-			//secret dijq5mojyt
-			//if(req.body.oauth_consumer_key == 'juqhxih203h7cezgw7yuongo')
-			//{
-				passport.authenticate('launch',function(err,user,info)
-				{ 
-					if (err) { return next(err); }
-				    if (!user) { return res.redirect(process.env.ORIGIN_URL+'/#/register'); }
-				    req.logIn(user, function(err) {
-				      if (err) { return next(err); }
-				      return res.redirect(process.env.ORIGIN_URL+'/#/home');
-				    });
-				})(req, res, next);
-			//}else
-			//{
-			//	return res.redirect(process.env.ORIGIN_URL+'/#/login');
-			//}
-		});
+        router.post('/launch', function(req,res,next)
+        {
+                //secret dijq5mojyt
+                if(req.body.oauth_consumer_key == 'juqhxih203h7cezgw7yuongo')
+                {
+                        passport.authenticate('launch',function(err,user,info)
+                        { 
+                                if (err) { return next(err); }
+                            if (!user) { return res.redirect(process.env.ORIGIN_URL+'/#/register'); }
+                            req.logIn(user, function(err) {
+                              if (err) { return next(err); }
+                              return res.redirect(process.env.ORIGIN_URL+'/#/login?option=1');
+                            });
+                        })(req, res, next);
+                }else
+                {
+                        return res.redirect(process.env.ORIGIN_URL+'/#/login');
+                }
+        });
 
 		/* Error signup */
 		router.get('/signup', function(req, res){
